@@ -70,7 +70,6 @@ class WKWebviewController: UIViewController,WKUIDelegate,WKNavigationDelegate
 
         let items = [self.negativeSpacer,self.leftBarButton]
         self.navigationItem.leftBarButtonItems = items as? [UIBarButtonItem]
-        print("this is bar",self.leftBarButton)
     }
 
     /*
