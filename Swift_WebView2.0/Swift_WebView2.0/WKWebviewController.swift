@@ -1,9 +1,9 @@
 //
 //  WKWebviewController.swift
-//  SwiftForKzkj-OCR
+//  Swift_WebView2.0
 //
-//  Created by YYKit on 2017/8/29.
-//  Copyright © 2017年 kzkj. All rights reserved.
+//  Created by baixue on 2020/3/12.
+//  Copyright © 2020 白雪. All rights reserved.
 //
 
 import UIKit
