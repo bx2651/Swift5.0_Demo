@@ -1,0 +1,14 @@
+
+use_frameworks!
+
+# Using a CDN with CocoaPods 1.7.2 or later can save a lot of time on pod installation, but it's experimental rather than the default.
+# source 'https://cdn.cocoapods.org/'
+
+# Uncomment this line to define a global platform for your project
+# platform :ios, '11.0'
+platform :ios, '11.0'
+
+target 'Swift_CollectionDemo' do
+  	pod 'Moya', '~> 13.0'
+  	
+end

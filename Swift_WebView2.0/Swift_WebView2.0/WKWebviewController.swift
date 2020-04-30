@@ -1,9 +1,9 @@
 //
-//  WKWebviewController.swift
-//  Swift_WebView2.0
+//  WK.swift
+//  Ganymede
 //
-//  Created by baixue on 2020/3/12.
-//  Copyright © 2020 白雪. All rights reserved.
+//  Created by baixue on 2020/3/17.
+//  Copyright © 2020 multisim. All rights reserved.
 //
 
 import UIKit
@@ -29,6 +29,7 @@ class WKWebviewController: UIViewController,WKUIDelegate,WKNavigationDelegate
         {
             () -> WKWebView in
             print(self.view.bounds)
+            
             var tempWebView = WKWebView.init(frame: self.view.bounds)
             tempWebView.uiDelegate = self
             tempWebView.navigationDelegate = self
@@ -38,6 +39,7 @@ class WKWebviewController: UIViewController,WKUIDelegate,WKNavigationDelegate
             tempWebView.autoresizesSubviews = true
             tempWebView.scrollView.alwaysBounceVertical = true
             tempWebView.allowsBackForwardNavigationGestures = true
+            
             return tempWebView
     }()
     
@@ -48,7 +50,7 @@ class WKWebviewController: UIViewController,WKUIDelegate,WKNavigationDelegate
     lazy var progress:UIProgressView =
         {
             () -> UIProgressView in
-            var rect:CGRect = CGRect.init(x: 0, y: 64, width: Width, height: 2.0)
+            var rect:CGRect = CGRect.init(x: 0, y: 64, width: kScreenW, height: 2.0)
             let tempProgressView = UIProgressView.init(frame: rect)
             tempProgressView.tintColor = UIColor.red
             tempProgressView.backgroundColor = UIColor.gray
@@ -191,7 +193,50 @@ class WKWebviewController: UIViewController,WKUIDelegate,WKNavigationDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.isHidden = true
+        ///偏好设置
+        //let preferences = WKPreferences()
+        //preferences.javaScriptEnabled = true
+
+        //let configuration = WKWebViewConfiguration()
+        //configuration.preferences = preferences
+        //configuration.selectionGranularity = WKSelectionGranularity.character
+        //configuration.userContentController = WKUserContentController()
+        // 给webview与swift交互起名字，webview给swift发消息的时候会用到
+        wkWebview.configuration.userContentController.add(WeakScriptMessageDelegate.init(self), name: "exitApp")
+        wkWebview.configuration.userContentController.add(WeakScriptMessageDelegate.init(self), name: "downMap")
+        wkWebview.configuration.userContentController.add(WeakScriptMessageDelegate.init(self), name: "finishActivity")
+        wkWebview.configuration.userContentController.add(WeakScriptMessageDelegate.init(self), name: "showToast")
+        wkWebview.configuration.userContentController.add(WeakScriptMessageDelegate.init(self), name: "callIos")
+        wkWebview.configuration.userContentController.add(WeakScriptMessageDelegate.init(self), name: "drawMap")
+        
     }
+    //退出登录
+    func exitApp() {
+    }
+    //下载地图
+    func downMap() {
+       
+    }
+    //结束webview
+    func finishActivity() {
+        print("结束当前页面")
+        self.navigationController?.popViewController(animated: true)
+       
+    }
+    //显示提示
+    func showToast() {
+        
+    }
+    //调用打电话功能
+    func callIos() {
+        
+    }
+    //画地图
+    func drawMap() {
+        
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -209,4 +254,45 @@ class WKWebviewController: UIViewController,WKUIDelegate,WKNavigationDelegate
      }
      */
     
+}
+
+extension WKWebviewController: WKScriptMessageHandler{
+    ///接收js调用方法
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        ///message.name是约定好的方法名,message.body是携带的参数
+        switch message.name {
+        case "exitApp":
+            exitApp()
+        case "downMap":
+            downMap()
+        case "finishActivity":
+            finishActivity()
+        case "callIos":
+            callIos()
+        case "drawMap":
+            drawMap()
+        case "showToast":
+            showToast()
+            
+        default:
+            break
+        }
+    }
+}
+
+
+///内存管理,使用delegate类防止ViewController不释放
+class WeakScriptMessageDelegate: NSObject, WKScriptMessageHandler {
+    weak var scriptDelegate: WKScriptMessageHandler?
+    init(_ scriptDelegate: WKScriptMessageHandler) {
+        self.scriptDelegate = scriptDelegate
+        super.init()
+    }
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        scriptDelegate?.userContentController(userContentController, didReceive: message)
+    }
+    deinit {
+        print("WeakScriptMessageDelegate is deinit")
+    }
 }

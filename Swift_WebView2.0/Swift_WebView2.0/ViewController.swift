@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     @IBAction func GoToWebView(_ sender: Any) {
         let wkWebviewController:WKWebviewController = WKWebviewController()
         //如果是http请求,则需要在info.plist中设置App Transport Security Settings下的Allow Arbitrary Loads为YES,https不需要
-        wkWebviewController.urlString = "http://www.baidu.com"
+        wkWebviewController.urlString = "http://127.0.0.1:5500/test.html"
         self.navigationController?.pushViewController(wkWebviewController, animated: true)
     }
     
